@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import requisicaoToken from '../services/API';
 
 class Login extends Component {
   state = {
@@ -22,6 +23,11 @@ class Login extends Component {
     this.setState({
       isButtonDisabled: !validBtn,
     });
+  };
+
+  handleClick = async () => {
+    const { token } = await requisicaoToken();
+    localStorage.setItem('token', token);
   };
 
   render() {
@@ -49,15 +55,17 @@ class Login extends Component {
           />
         </label>
 
-        <button
-          id="btn"
-          data-testid="btn-play"
-          type="button"
-          disabled={ isButtonDisabled }
-          // onClick={ this.handleClick }
-        >
-          Play
-        </button>
+        <Link to="/game">
+          <button
+            id="btn"
+            data-testid="btn-play"
+            type="button"
+            disabled={ isButtonDisabled }
+            onClick={ this.handleClick }
+          >
+            Play
+          </button>
+        </Link>
 
         <Link to="/settings">
           <button
