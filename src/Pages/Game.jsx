@@ -4,8 +4,14 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { actionData } from '../redux/action/index';
 import pergutasRespostaApi from '../services/DATA';
+import Question from '../components/Question';
 
 class Game extends Component {
+  state = {
+    numeroQuestao: 0,
+    questionDisabled: true,
+  };
+
   async componentDidMount() {
     try {
       const { responseCode, dispatch } = this.props;
@@ -18,6 +24,7 @@ class Game extends Component {
     } catch (error) {
       this.limpaRedireciona();
     }
+    this.setState({ questionDisabled: false });
   }
 
   limpaRedireciona = () => {
@@ -27,10 +34,11 @@ class Game extends Component {
   };
 
   render() {
+    const { numeroQuestao, questionDisabled } = this.state;
     return (
       <div>
         <Header />
-        <h1>Jogo</h1>
+        <Question numero={ numeroQuestao } disabled={ questionDisabled } />
       </div>
     );
   }
