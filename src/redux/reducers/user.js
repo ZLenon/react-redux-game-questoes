@@ -2,6 +2,7 @@ const INITIAL_STATE = {
   name: '',
   email: '',
   score: 0,
+  responseAPI: {},
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -11,6 +12,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
       ...state,
       name: action.payload.name,
       email: action.payload.email,
+    };
+  case 'ACTION_RESPONSE':
+    return {
+      ...state,
+      responseCode: action.payload,
+    };
+  case 'ACTION_DATA':
+    return {
+      ...state,
+      responseAPI: action.payload,
     };
   default: return state;
   }
