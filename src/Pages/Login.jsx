@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'; // Sempre importante para declarar props
 import requisicaoToken from '../services/API';
+import { actionLogin } from '../redux/action';
 
 class Login extends Component {
   state = {
@@ -27,7 +29,11 @@ class Login extends Component {
 
   handleClick = async () => {
     const { token } = await requisicaoToken();
+    const { name, email } = this.state;
+    const { dispatch } = this.props;
     localStorage.setItem('token', token);
+
+    dispatch(actionLogin({ name, email }));
   };
 
   render() {
@@ -79,5 +85,9 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
 
 export default connect()(Login);

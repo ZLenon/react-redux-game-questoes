@@ -1,13 +1,12 @@
-import { ACTION_LOGIN } from '../action';
-
 const INITIAL_STATE = {
   name: '',
   email: '',
+  score: 0,
 };
 
-const login = (state = INITIAL_STATE, action) => {
+const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case ACTION_LOGIN:
+  case 'ACTION_LOGIN':
     return {
       ...state,
       name: action.payload.name,
@@ -16,4 +15,5 @@ const login = (state = INITIAL_STATE, action) => {
   default: return state;
   }
 };
-export default login;
+
+export default userReducer;
