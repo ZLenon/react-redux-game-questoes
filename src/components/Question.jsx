@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import './Question.css';
 
 class Question extends Component {
+  state = {
+    isAnswered: false,
+  };
+
   criarBotoes = () => {
     const { numero, perguntas } = this.props;
     const { results } = perguntas;
+    const { isAnswered } = this.state;
 
     const botaoCerto = (
       <button
@@ -13,6 +19,8 @@ class Question extends Component {
         value={ 1 }
         key={ 10 }
         data-testid="correct-answer"
+        className={ (isAnswered) ? 'correto' : '' }
+        onClick={ this.answerClick }
       >
         {results[numero].correct_answer}
       </button>
@@ -24,6 +32,8 @@ class Question extends Component {
           value={ 0 }
           key={ i }
           data-testid={ `wrong-answer-${i}` }
+          className={ (isAnswered) ? 'errado' : '' }
+          onClick={ this.answerClick }
         >
           {e}
         </button>);
@@ -33,6 +43,10 @@ class Question extends Component {
     todosBotoes.push(botaoCerto);
     const botoesRandomizados = this.shuffle(todosBotoes);
     return botoesRandomizados;
+  };
+
+  answerClick = () => {
+    this.setState({ isAnswered: true });
   };
 
   shuffle = (array) => {
@@ -49,6 +63,7 @@ class Question extends Component {
   render() {
     const { numero, perguntas } = this.props;
     const { results } = perguntas;
+    const { isAnswered } = this.state;
     return (
       <div>
         {(Object.keys(perguntas).length > 0)
@@ -63,6 +78,8 @@ class Question extends Component {
               <div data-testid="answer-options">
                 {this.criarBotoes()}
               </div>
+              {(isAnswered)
+                ? (<button type="button" data-testid="btn-next">Next</button>) : ('')}
             </form>
           )
           : ('')}
