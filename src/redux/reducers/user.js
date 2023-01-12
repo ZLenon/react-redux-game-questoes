@@ -12,6 +12,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
       name: action.payload.name,
       email: action.payload.email,
     };
+  case 'ACTION_RESPONSE':
+    return {
+      ...state,
+      responseCode: action.payload,
+    };
+  case 'ACTION_DATA':
+    return {
+      ...state,
+      responseAPi: action.payload,
+    };
   default: return state;
   }
 };
