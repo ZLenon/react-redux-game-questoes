@@ -57,7 +57,8 @@ class Question extends Component {
       currentIndex -= 1;
       [array[currentIndex],
         array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    } return array;
+    }
+    return array;
   };
 
   render() {
