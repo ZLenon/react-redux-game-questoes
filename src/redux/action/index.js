@@ -8,6 +8,11 @@ export const aumentarScore = (pontos) => ({
   payload: pontos,
 });
 
+export const clearScore = (score) => ({
+  type: 'ACTION_CLEAR',
+  payload: score,
+});
+
 export const actionResponse = (responseCode) => ({
   type: 'ACTION_RESPONSE',
   payload: responseCode,
