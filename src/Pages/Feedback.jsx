@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class FeedBack extends Component {
+  playAgain = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
+
   render() {
     const { score, assertions } = this.props;
     const THREE = 3;
@@ -20,6 +25,13 @@ class FeedBack extends Component {
         <p data-testid="feedback-total-question">{assertions}</p>
         <p>Pontuação:</p>
         <p data-testid="feedback-total-score">{score}</p>
+        <button
+          type="button"
+          onClick={ this.playAgain }
+          data-testid="btn-play-again"
+        >
+          Play Again
+        </button>
       </div>
     );
   }
@@ -31,8 +43,9 @@ const mapStateToProps = (state) => ({
 });
 
 FeedBack.propTypes = {
-  score: PropTypes.number.isRequired,
-  assertions: PropTypes.number.isRequired,
-};
+  score: PropTypes.number,
+  assertions: PropTypes.number,
+  history: PropTypes.func,
+}.isRequired;
 
 export default connect(mapStateToProps)(FeedBack);
