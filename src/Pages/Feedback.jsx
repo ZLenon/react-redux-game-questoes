@@ -43,7 +43,11 @@ class FeedBack extends Component {
     return (
       <div>
         <Header />
-        <h1>FeedBack</h1>
+        <h1
+          data-testid="h1-text"
+        >
+          FeedBack
+        </h1>
         <h3
           data-testid="feedback-text"
         >
