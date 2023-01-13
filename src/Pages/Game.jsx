@@ -33,14 +33,25 @@ class Game extends Component {
     history.push('/');
   };
 
+  sendNumber = () => {
+    const { numeroQuestao } = this.state;
+
+    this.setState({
+      numeroQuestao: numeroQuestao + 1,
+    });
+  };
+
   render() {
     const { numeroQuestao, questionDisabled } = this.state;
+    const { history } = this.props;
     return (
       <div>
         <Header />
         <Question
           numero={ numeroQuestao }
           disabled={ questionDisabled }
+          sendNumber={ this.sendNumber }
+          history={ history }
         />
       </div>
     );
@@ -51,6 +62,7 @@ const mapStateToProps = (state) => ({
 });
 
 Game.propTypes = {
+  history: PropTypes.func,
   responseCode: PropTypes.string,
 }.isRequired;
 

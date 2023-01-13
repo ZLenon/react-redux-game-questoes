@@ -12,6 +12,10 @@ class Question extends Component {
   };
 
   componentDidMount() {
+    this.deletTimer();
+  }
+
+  deletTimer = () => {
     const umSegundo = 1000;
     const timerID = setInterval(() => {
       const { timeLeft } = this.state;
@@ -23,7 +27,7 @@ class Question extends Component {
         this.setState({ timeLeft: timeLeft - 1 });
       }
     }, umSegundo);
-  }
+  };
 
   criarBotoes = () => {
     const { numero, perguntas } = this.props;
@@ -106,10 +110,33 @@ class Question extends Component {
     return array;
   };
 
+  resetQuestion = () => {
+    const { timeLeft } = this.state;
+    const { sendNumber } = this.props;
+    this.setState({ isAnswered: false, buttonsDisabled: false });
+    sendNumber();
+    if (timeLeft === 0) {
+      this.setState({
+        timeLeft: 30,
+      });
+      this.deletTimer();
+    } else {
+      this.setState({
+        timeLeft: 30,
+      });
+    }
+  };
+
+  redirectNext = () => {
+    const { history } = this.props;
+    history.push('/feedback');
+  };
+
   render() {
     const { numero, perguntas } = this.props;
     const { results } = perguntas;
     const { isAnswered, timeLeft } = this.state;
+    const FOUR = 4;
     return (
       <div>
         {(Object.keys(perguntas).length > 0)
@@ -130,6 +157,7 @@ class Question extends Component {
                   <button
                     type="button"
                     data-testid="btn-next"
+                    onClick={ numero < FOUR ? this.resetQuestion : this.redirectNext }
                   >
                     Next
                   </button>)
@@ -149,6 +177,8 @@ const mapStateToProps = (state) => ({
 });
 
 Question.propTypes = {
+  sendNumber: PropTypes.func,
+  history: PropTypes.func,
   numero: PropTypes.number,
   perguntas: PropTypes.shape({
     response_code: PropTypes.number,
