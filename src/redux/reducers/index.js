@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import userReducer from './user';
+import playerReducer from './player';
+import requisitionReducer from './requisitions';
 
 const rootReducer = combineReducers({
-  user: userReducer,
+  player: playerReducer,
+  requisition: requisitionReducer,
 });
 
 export default rootReducer;

@@ -38,13 +38,16 @@ class Game extends Component {
     return (
       <div>
         <Header />
-        <Question numero={ numeroQuestao } disabled={ questionDisabled } />
+        <Question
+          numero={ numeroQuestao }
+          disabled={ questionDisabled }
+        />
       </div>
     );
   }
 }
 const mapStateToProps = (state) => ({
-  responseCode: state.user.responseCode,
+  responseCode: state.requisition.responseCode,
 });
 
 Game.propTypes = {

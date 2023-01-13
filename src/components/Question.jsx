@@ -2,16 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './Question.css';
+import { aumentarScore } from '../redux/action';
 
 class Question extends Component {
   state = {
     isAnswered: false,
+    timeLeft: 30,
+    buttonsDisabled: false,
   };
+
+  componentDidMount() {
+    const umSegundo = 1000;
+    const timerID = setInterval(() => {
+      const { timeLeft } = this.state;
+      const fim = 0;
+      if (timeLeft === fim) {
+        clearTimeout(timerID);
+        this.perguntaRespondida();
+      } else {
+        this.setState({ timeLeft: timeLeft - 1 });
+      }
+    }, umSegundo);
+  }
 
   criarBotoes = () => {
     const { numero, perguntas } = this.props;
     const { results } = perguntas;
-    const { isAnswered } = this.state;
+    const { isAnswered, buttonsDisabled } = this.state;
 
     const botaoCerto = (
       <button
@@ -20,7 +37,8 @@ class Question extends Component {
         key={ 10 }
         data-testid="correct-answer"
         className={ (isAnswered) ? 'correto' : '' }
-        onClick={ this.answerClick }
+        onClick={ this.perguntaAcertada }
+        disabled={ buttonsDisabled }
       >
         {results[numero].correct_answer}
       </button>
@@ -33,7 +51,8 @@ class Question extends Component {
           key={ i }
           data-testid={ `wrong-answer-${i}` }
           className={ (isAnswered) ? 'errado' : '' }
-          onClick={ this.answerClick }
+          onClick={ this.perguntaRespondida }
+          disabled={ buttonsDisabled }
         >
           {e}
         </button>);
@@ -45,8 +64,34 @@ class Question extends Component {
     return botoesRandomizados;
   };
 
-  answerClick = () => {
-    this.setState({ isAnswered: true });
+  perguntaAcertada = () => {
+    this.perguntaRespondida();
+
+    const { timeLeft } = this.state;
+    const { numero, perguntas, scoreState, assertionState, dispatch } = this.props;
+    const { results } = perguntas;
+
+    let dificuldade;
+    const easy = 1;
+    const medium = 2;
+    const hard = 3;
+    const base = 10;
+
+    if (results[numero].difficulty === 'easy') {
+      dificuldade = easy;
+    } else if (results[numero].difficulty === 'medium') {
+      dificuldade = medium;
+    } else if (results[numero].difficulty === 'hard') {
+      dificuldade = hard;
+    }
+
+    const score = scoreState + base + (timeLeft * dificuldade);
+    const assertion = assertionState + 1;
+    dispatch(aumentarScore({ score, assertion }));
+  };
+
+  perguntaRespondida = () => {
+    this.setState({ isAnswered: true, buttonsDisabled: true });
   };
 
   shuffle = (array) => {
@@ -64,12 +109,13 @@ class Question extends Component {
   render() {
     const { numero, perguntas } = this.props;
     const { results } = perguntas;
-    const { isAnswered } = this.state;
+    const { isAnswered, timeLeft } = this.state;
     return (
       <div>
         {(Object.keys(perguntas).length > 0)
           ? (
             <form>
+              <h1>{`timer ${timeLeft}`}</h1>
               <h2 data-testid="question-category">
                 {results[numero].category}
               </h2>
@@ -80,7 +126,14 @@ class Question extends Component {
                 {this.criarBotoes()}
               </div>
               {(isAnswered)
-                ? (<button type="button" data-testid="btn-next">Next</button>) : ('')}
+                ? (
+                  <button
+                    type="button"
+                    data-testid="btn-next"
+                  >
+                    Next
+                  </button>)
+                : ('')}
             </form>
           )
           : ('')}
@@ -90,11 +143,13 @@ class Question extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  perguntas: state.user.responseAPI,
+  perguntas: state.requisition.responseAPI,
+  scoreState: state.player.score,
+  assertionState: state.player.assertions,
 });
 
 Question.propTypes = {
-  numero: PropTypes.number.isRequired,
+  numero: PropTypes.number,
   perguntas: PropTypes.shape({
     response_code: PropTypes.number,
     results: PropTypes.arrayOf(
@@ -107,7 +162,10 @@ Question.propTypes = {
         incorrect_answers: PropTypes.arrayOf(PropTypes.string),
       }),
     ),
-  }).isRequired,
+  }),
+  scoreState: PropTypes.number,
+  assertionState: PropTypes.number,
+  dispatch: PropTypes.func,
 }.isRequired;
 
 export default connect(mapStateToProps)(Question);
