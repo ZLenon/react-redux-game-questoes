@@ -3,8 +3,8 @@ export const actionLogin = (infoLogin) => ({
   payload: infoLogin,
 });
 
-export const mudancaPontuacao = (pontos) => ({
-  type: 'PONTUACAO',
+export const aumentarScore = (pontos) => ({
+  type: 'ACTION_POINTS',
   payload: pontos,
 });
 

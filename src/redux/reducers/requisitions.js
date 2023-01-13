@@ -1,18 +1,9 @@
 const INITIAL_STATE = {
-  name: '',
-  email: '',
-  score: 0,
   responseAPI: {},
 };
 
-const userReducer = (state = INITIAL_STATE, action) => {
+const requisitionReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case 'ACTION_LOGIN':
-    return {
-      ...state,
-      name: action.payload.name,
-      email: action.payload.email,
-    };
   case 'ACTION_RESPONSE':
     return {
       ...state,
@@ -27,4 +18,4 @@ const userReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default userReducer;
+export default requisitionReducer;
