@@ -22,17 +22,3 @@ export const actionData = (responseAPI) => ({
   type: 'ACTION_DATA',
   payload: responseAPI,
 });
-
-/* export const actionApi = () => ( */
-/*   async (dispatch) => { */
-/*     try { */
-/*       const exchange = await requisicaoToken(); */
-/*       dispatch({ */
-/*         type: CHANGE_EXCHANGE, */
-/*         payload: Object.keys(exchange), */
-/*       }); */
-/*     } catch (error) { */
-/*       dispatch(); */
-/*     } */
-/*   } */
-/* ); */

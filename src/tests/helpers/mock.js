@@ -61,7 +61,7 @@ const mockResult = {
         {
           category: 'Entertainment: Video Games',
           type: 'multiple',
-          difficulty: 'medium',
+          difficulty: 'hard',
           question: 'How many sets of grandmaster witcher gear are in The Witcher 3&#039;s Blood and Wine DLC?',
           correct_answer: '5',
           incorrect_answers: [
