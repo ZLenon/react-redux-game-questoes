@@ -22,7 +22,7 @@ class Game extends Component {
       if (data.response_code === NUMBER) return this.limpaRedireciona();
       dispatch(actionData(data));
     } catch (error) {
-      this.limpaRedireciona();
+      // this.limpaRedireciona();
     }
     this.setState({ questionDisabled: false });
   }

@@ -12,9 +12,12 @@ class Ranking extends Component {
 
       const rankings = ranking.map((e, i) => {
         const player = (
-          <tr value={ i }>
+          <tr key={ i }>
             <td>
-              <img src={ e.picture } alt="foto de perfil" />
+              <img
+                src={ e.picture }
+                alt="foto de perfil"
+              />
             </td>
             <td data-testid={ `player-name-${i}` }>{e.name}</td>
             <td data-testid={ `player-score-${i}` }>{e.score}</td>
@@ -25,7 +28,7 @@ class Ranking extends Component {
       return rankings;
     }
 
-    return ('');
+    return ([]);
   };
 
   playAgain = () => {
@@ -46,12 +49,14 @@ class Ranking extends Component {
           Inicio
         </button>
         <table>
-          <tr>
-            <th>Foto</th>
-            <th>Nome</th>
-            <th>Score</th>
-          </tr>
-          { this.createRanking() }
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nome</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>{this.createRanking()}</tbody>
         </table>
       </div>
     );

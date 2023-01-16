@@ -142,7 +142,7 @@ class Question extends Component {
         {(Object.keys(perguntas).length > 0)
           ? (
             <form>
-              <h1>{`timer ${timeLeft}`}</h1>
+              <h1 data-testid="timer-question">{`timer ${timeLeft}`}</h1>
               <h2 data-testid="question-category">
                 {results[numero].category}
               </h2>
