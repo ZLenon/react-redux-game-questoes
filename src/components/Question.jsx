@@ -75,21 +75,16 @@ class Question extends Component {
     const { numero, perguntas, scoreState, assertionState, dispatch } = this.props;
     const { results } = perguntas;
 
-    let dificuldade;
-    const easy = 1;
-    const medium = 2;
-    const hard = 3;
+    const dif = ['easy', 'medium', 'hard'];
     const base = 10;
+    let score;
 
-    if (results[numero].difficulty === 'easy') {
-      dificuldade = easy;
-    } else if (results[numero].difficulty === 'medium') {
-      dificuldade = medium;
-    } else if (results[numero].difficulty === 'hard') {
-      dificuldade = hard;
-    }
+    dif.forEach((e, i) => {
+      if (results[numero].difficulty === e) {
+        score = scoreState + base + (timeLeft * (i + 1));
+      }
+    });
 
-    const score = scoreState + base + (timeLeft * dificuldade);
     const assertion = assertionState + 1;
     dispatch(aumentarScore({ score, assertion }));
   };

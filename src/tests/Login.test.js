@@ -8,8 +8,10 @@ import mockResult from "./helpers/mock";
 import Ranking from "../Pages/Ranking";
 import Feedback from "../Pages/Feedback";
 import perguntasRespostas from "../services/DATA"
+import mockRespostaApi from "../services/mockDATA"
 import requisicaoToken from "../services/API"
 import Question from "../components/Question";
+import Game from "../Pages/Game";
 
 const nome = 'Jose da Silva';
 const email = 'alguem@email.com';
@@ -21,7 +23,7 @@ afterEach(() => {
 
 describe('Testa a tela de Game:', () => {
   it('Verifica se com um token inválido, o usuario é redirecionado para a tela de Login;', async () => {
-    const {history } = renderWithRouterAndRedux(<Question />);
+    const { history } = renderWithRouterAndRedux(<Game />);
 
     const teste = '156189156489';
     
@@ -32,6 +34,56 @@ describe('Testa a tela de Game:', () => {
       expect(result.response_code).toEqual(3);
       expect(history.location.pathname).toBe('/');
     });
+  });
+
+  it('Verifica se com um token inválido, o usuario é redirecionado para a tela de Login;', async () => {
+    const { history } = renderWithRouterAndRedux(<Game />);
+
+    const teste = '156189156489';
+    
+    const jsonConv = JSON.stringify(teste);
+    localStorage.setItem('token', jsonConv);
+    const result = await perguntasRespostas(teste);
+    await waitFor(() => {
+      expect(result.response_code).toEqual(3);
+      expect(history.location.pathname).toBe('/');
+    });
+  });
+
+  jest.setTimeout(40000);
+  it('Verifica se ao deixar o tempo correr, a pergunta conta como errada', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+
+    const nomeInput = screen.getByTestId('input-player-name');
+    const emailInput = screen.getByTestId('input-gravatar-email');
+    const playButton = screen.getByTestId('btn-play');
+
+    userEvent.type(nomeInput, nome);
+    userEvent.type(emailInput, email);
+    userEvent.click(playButton);
+
+    await waitFor(() => expect(history.location.pathname).toBe('/game'));
+
+    const token = await requisicaoToken();
+    localStorage.setItem('token', token);
+
+    await perguntasRespostas(token);
+    await new Promise((r) => setTimeout(r, 31000));
+
+    const timer = screen.getByTestId('timer-question');
+    expect(timer.innerHTML).toBe('timer 0');
+   
+    const correctButton = screen.getByTestId('correct-answer');
+    expect(correctButton).toHaveClass('correto')
+
+    const incorrectButton = screen.getByTestId('wrong-answer-0');
+    expect(incorrectButton).toHaveClass('errado');
+
+    const nextQuestion = screen.getByTestId('btn-next');
+    userEvent.click(nextQuestion);
+
+    const timerDois = screen.getByTestId('timer-question');
+    expect(timerDois.innerHTML).toBe('timer 30');
   });
 });
 
@@ -50,6 +102,7 @@ describe('Testa a tela de Login:', () => {
   });
 
   it('Verifica se ao clicar no botão "Play", o usuário é direcionado a tela de Game e o jogo começa;', async () => {
+    
     const { history } = renderWithRouterAndRedux(<App />);
 
     const nomeInput = screen.getByTestId('input-player-name');
@@ -65,7 +118,9 @@ describe('Testa a tela de Login:', () => {
     const token = await requisicaoToken();
     localStorage.setItem('token', token);
 
-    await perguntasRespostas(token)
+    await mockRespostaApi();
+
+    await new Promise((r) => setTimeout(r, 1000));
 
     const correctButton = screen.getByTestId('correct-answer');
     userEvent.click(correctButton);
@@ -107,7 +162,7 @@ describe('Testa a tela de Login:', () => {
 
   it('Verifica se ao clicar no botão "Play", o token é guardado no localstorage;', () => {
     const joke = {
-      response_code: "0",
+      response_code: 0,
       response_message: "Token Generated Successfully!",
       token: "f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6"
     };
